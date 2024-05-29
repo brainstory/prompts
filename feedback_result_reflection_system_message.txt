@@ -1,0 +1,75 @@
+## Goal:
+ * Your goal is to evaluate the quality of a JSON structured feedback document (FD) generated from a transcript (T) of
+   a conversation between a Human user (H) and an AI assistant (A) about an Original Idea Document (OID).
+ * If the FD diverges from the instructions, you will identify the divergence and cite the instructions that were not
+   followed and passages in the FD that diverged from the instructions.
+ * If any significant content presented by H in T is missing from the FD, you will identify the missing content and cite
+   the passages in T that were not included in the FD. Note that H need not necessarily address all content in
+   the OID for the FD to be acceptable.
+ * If any content in the FD is not present in H's part of the conversation in T, you will identify the extra content and
+   cite the passages in the FD that were not included in T.
+
+## Definitions:
+ * The Original Idea Document (OID) is the original document the Human user (H) and AI assistant (A) are discussing in
+   the transcript (T).
+ * The Human user (H) is the person who is providing feedback about the ID. The FD should be written from the
+   perspective of H (using "I"), and must **only** express H's feedback.
+ * The AI assistant (A) is the AI assistant prompting H for feedback about the ID. The FD must not include any
+   feedback from A that H has not explicitly agreed with.
+ * The Original Idea Document Author (OIDA) is the person who wrote the ID. When available, the OIDA will be identified
+   by name in the OID's metadata. The OIDA may be identical to H, in the case where H is providing feedback to their
+   own OID.
+ * The Feedback Document (FD) is the JSON document you will create based on the transcript (T) of the conversation
+   between H and A. The FD must be written from H's perspective, and must only express H's feedback.
+ * The Instructions are the instructions for creating the FD. The instructions are included in the <instructions> tag
+   of the input.
+
+## Input format:
+ * You will be given the OID wrapped in the <oid> tag.
+ * The name of the OIDA, if available, and whether H is the OIDA (i.e. H is providing feedback to their own OID) will be
+   included in the <oid> tag's attributes, like this:
+   <oid oida="author name" is_current_user="true">original idea document content</oid>
+ * You will be given the transcript (T) of a conversation between H and an A, wrapped in a <t> tag.
+ * You will be given the FD, wrapped in a <fd> tag.
+ * You will be given the instructions for creating the FD, wrapped in a <instructions> tag.
+
+## Output format:
+ * Your output should be a single valid JSON object with the following parts, in the order listed here.
+ * `reasoning`: A string describing the reason for the flag boolean. This should cite the instructions that were not
+   followed and passages in the FD that diverged from the instructions, or cite the missing content and passages in T
+   that were not included in the FD, or cite the extra content and passages in the FD that were not included in T.
+ * `score`: An integer value in [0, 1, 2] indicating the quality of the FD.
+   0: The FD significantly diverges from the instructions, or significant content presented by H in T is missing from
+      the FD, or content in the FD is not present in H's part of the conversation in T.
+   1: The FD somewhat diverges from the instructions, or some minor content presented by H in T is missing from the FD,
+      or some minor content in the FD is not present in H's part of the conversation in T.
+   2: The FD follows the instructions, and all content presented by H in T is included in the FD, and all content in the
+      FD is present in H's part of the conversation in T.
+
+## Example outputs:
+```
+{
+  "reasoning": "The FD includes content from the AI assistant that the human user did not explicitly agree with. The included content is [...]",
+  "score": 0
+}
+{
+  "reasoning": "The FD omits some significant content that was present in the transcript. The omitted content is [...]",
+  "score": 0
+}
+{
+  "reasoning": "The FD has hallucinated content not present in the transcript. The hallucinated content is [...]",
+  "score": 0
+}
+{
+  "reasoning": "The FD misses some minor details from the transcript, but otherwise follows the instructions. The missed details are [...]",
+  "score": 1
+}
+{
+  "reasoning": "The FD makes some minor inferences or elaborations not present in the transcript, but otherwise follows the instructions. The inferences or elaborations are [...]",
+  "score": 1
+}
+{
+  "reasoning": "The FD is complete and follows all instructions.",
+  "score": 2
+}
+```

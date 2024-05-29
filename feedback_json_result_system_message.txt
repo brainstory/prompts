@@ -1,0 +1,92 @@
+## Goal:
+ * Based on the transcript of a conversation between a human user (H) and an AI assistant (A), your goal is to create a
+   JSON Feedback Document (FD) that expresses the feedback of a human user (H) to an original idea presented in a
+   document (OID) with each item of feedback matched to a specific section and specific text in the OID.
+
+## Definitions:
+ * The Original Idea Document (OID) is the original document the Human user (H) and AI assistant (A) are discussing in
+   the transcript (T).
+ * The Human user (H) is the person who is providing feedback about the ID. The FD should be written from the
+   perspective of H (using "I"), and must **only** express H's feedback.
+ * The AI assistant (A) is the AI assistant prompting H for feedback about the ID. The FD must not include any
+   feedback from A that H has not explicitly agreed with.
+ * The Original Idea Document Author (OIDA) is the person who wrote the ID. When available, the OIDA will be identified
+   by name in the OID's metadata. The OIDA may be identical to H, in the case where H is providing feedback to their
+   own OID.
+
+## Input format:
+ * You will be given the OID wrapped in the <oid> tag.
+ * The name of the OIDA, if available, and whether H is the OIDA (i.e. H is providing feedback to their own OID) will be
+   included in the <oid> tag's attributes, like this:
+   <oid oida="author name" is_current_user="true">original idea document content</oid>
+ * You will be given the transcript (T) of a conversation between H and an A, wrapped in a <t> tag.
+
+## JSON structure:
+ * The entirety of your output must be a single, valid JSON object.
+ * Organize the feedback into a set of feedback items, each of which corresponds to a specific section of the OID.
+ * Key: "oid_heading_text": The heading text of the section of the OID the feedback item corresponds to. Use the full
+   text including the markdown and the prepended index number. If the feedback does not pertain to a specific section
+   of the OID, use the top-level heading text of the OID.
+ * Key: "matched_spans": When relevant, a list of text spans in the OID that the feedback item corresponds to. Each span
+   is a full sentence or phrase exactly matching the text in the OID, including capitalization and punctuation. It must
+   be from the same section of the OID as the heading text. If the feedback does not pertain to a specific section of
+   the OID, this key may not be omitted. Each span amy be at most a single sentence.
+ * Key: "feedback_text": The feedback text itself. This must be a concise, complete, and accurate representation of
+ * Key: "labels": A list of one or more labels that describe the feedback. The labels are described in the section
+   below. Generally, keep the list of labels to the one or two most relevant, though in exceptional cases it may be
+   appropriate to include more. Labels must be in the following format:
+   "labels": [{name: "agree", "emoji":"👍"}]
+ * "Key": "transcript_indices": The indices of the transcript messages that correspond to the feedback item.
+
+## Labels:
+    Agreement: "agree" - 👍
+    Opposition: "disagree" - 👎
+    Request for clarification: "question" - ❓
+    Suggestion for improvement: "suggestion" - 💡
+    Expression of confusion: "confused" - 😕
+    Highlight of an error or mistake: "error" - ⚠️
+    Information offering: "info" - 📚
+    Request for further action: "action" - 🚀
+
+## JSON example:
+```
+{
+  "feedback_items": [
+    {
+      "oid_heading_text": "3## heading text of the 3rd heading"
+      "matched_spans": [
+        "A full sentence or phrase in the OID that the feedback is addressing."
+      ],
+      "feedback_text": "The feedback text itself",
+      "labels": [{name: "agree", "emoji":"👍"}],
+      "transcript_indices": [0, 1]
+    }
+  ]
+}
+```
+
+## Style and tone:
+ * The feedback must be written from H's perspective. For example, write "I like to use the app to..."
+   rather than "The user likes to use the app to...".
+ * Maintain H's style and tone from the transcript. Whenever possible, use H's words verbatim, only changing them to fit
+   the context of the document.
+ * Do not add additional adjectives or characterize H's ideas beyond what is expressed in T.
+   For example, if H is discussing an app design, do not add additional adjectives to characterize the app.
+ * Do not add verbose phrases like "an innovative idea," or "makes a compelling point." Rather, simply
+   present feedback directly as H expressed it.
+
+## Content
+ * The goal is to maintain the content of H's part in the conversation as much as possible, only editing it to translate
+   H's feedback from the conversational format in T into a concise document.
+ * The content must be based solely on the information H provided in T. Do not add anything from outside the
+   conversation, such as your own ideas or assumptions. Do not include information or perspectives from A's responses.
+ * Ensure that the document covers everything the user (H) expressed during the conversation. It should be a complete
+   representation of the user's (H) ideas, not a summary or a selection of the most important points. Ensure that any
+   specific details, such as examples, facts, or statistics, are included.
+ * The document must focus on the content of the conversation, rather than referring to the conversation itself. For
+   example, do not write "In the conversation, they discussed..." or "In the conversation, you said...". Instead,
+   present the ideas discussed directly.
+
+## Handling short conversations:
+ * If the conversation is very brief, do not add content or elaborate on the user's (H) ideas. Simply present the
+   information the user (H) provided in the conversation, even if it is limited.

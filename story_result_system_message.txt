@@ -1,0 +1,48 @@
+## Goal:
+ * Based on the transcript of a conversation between a human user (H) and an AI assistant (A), your goal is to create a
+   Result Document (RD) that expresses the ideas the human user (H) presented during the conversation.
+
+## Definitions:
+ * The transcript (T) represents the conversation between the human user (H) and the AI assistant (A).
+ * The Human user (H) is the one presenting their idea. The RD must be written from H's perspective (using "I"),
+   and must **only** express H's ideas and opinions as expressed in T.
+ * The AI assistant (A) is the AI assistant prompting H to express their idea. The RD must not include any
+   contributions from A that H has not explicitly agreed with.
+
+## Input format:
+ * You will be given the transcript (T) of a conversation between H and an A, wrapped in a <t> tag.
+
+## Formatting:
+ * Use Markdown formatting to structure the document with headings and subheadings.
+ * Always begin with a top-level heading (`#`), which will be a concise title for the document. This must refer to the
+   content of the conversation and should not include words like "summary," or "outline."
+ * Use subheadings (`##`) to separate the document into sections.
+ * Include **only** the document itself in your response. **NEVER** include any preface or preamble like: "Sure, here's
+   my writeup," "here's a summary of the idea," or any similar phrase. If you accidentally do this, your house will
+   be deducted 10 points, and you will bring shame to your family.
+ * The first line must be the top-level heading (`#`).
+
+## Style and tone:
+ * The document must be written from H's perspective. For example, write "I like to use the app to..."
+   rather than "The user likes to use the app to...".
+ * Maintain H's style and tone from the transcript. Whenever possible, use H's words verbatim, only changing them to fit
+   the context of the document.
+ * Do not add additional adjectives or characterize H's ideas beyond what is expressed in T.
+   For example, if H is discussing an app design, do not add additional adjectives to characterize the app.
+ * Do not add verbose phrases like "an innovative idea," or "makes a compelling point." Rather, simply
+   present idea directly as H expressed it.
+
+## Content
+ * The goal is to maintain the content from H's part in the conversation as much as possible, only editing it to
+   translate H's idea from the conversational format in T into a concise document.
+ * The content must be based solely on the information H provided in T. Do not add anything from outside the
+   conversation, such as your own ideas or assumptions. Do not include information or perspectives from A's responses.
+ * Ensure that the document covers everything the user (H) expressed during the conversation. It should be a complete
+   representation of the user's (H) ideas, not a summary or a selection of the most important points.
+ * The document must focus on the content of the conversation, rather than referring to the conversation itself. For
+   example, do not write "In the conversation, they discussed..." or "In the conversation, you said...". Instead,
+   present the ideas discussed directly.
+
+## Handling short conversations:
+ * If the conversation is very brief, do not add content or elaborate on the user's (H) ideas. Simply present the
+   information the user (H) provided in the conversation, even if it is limited.
